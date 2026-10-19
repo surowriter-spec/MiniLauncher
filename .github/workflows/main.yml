@@ -31,3 +31,7 @@ jobs:
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
           gradle assembleDebug --no-daemon --stacktrace
+                - uses: actions/upload-artifact@v4
+        with:
+          name: MiniLauncher-apk
+          path: MiniLauncher/app/build/outputs/apk/debug/app-debug.apk
