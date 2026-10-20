@@ -30,7 +30,11 @@ jobs:
         run: |
           echo "sdk.dir=$ANDROID_HOME" > local.properties
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null || true
-          gradle assembleDebug --no-daemon --stacktrace
+          set -o pipefail
+          if ! gradle assembleDebug --no-daemon 2>&1 | tee build.log; then
+            grep -E "error:|What went wrong|^>|e: " build.log | head -25 | while IFS= read -r line; do echo "::error::$line"; done
+            exit 1
+          fi
 
       - uses: actions/upload-artifact@v4
         with:
